@@ -74,21 +74,19 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
         >
           {modeLabels[mode]}
         </motion.span>
-        <div
-          className="text-white text-6xl md:text-7xl font-light tracking-tight text-shadow tabular-nums"
-        >
+        <span className="text-white text-6xl md:text-7xl font-light tracking-tight text-shadow tabular-nums">
           {String(minutes).padStart(2, '0')}
           <span
             className="inline-block"
             style={{
-              opacity: isRunning ? undefined : 1,
               animation: isRunning ? 'blink 1s step-end infinite' : 'none',
+              opacity: 1,
             }}
           >
             :
           </span>
           {String(seconds).padStart(2, '0')}
-        </div>
+        </span>
       </div>
 
       <style>{`

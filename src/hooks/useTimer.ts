@@ -19,6 +19,59 @@ function playChimeSound() {
   }
 }
 
+function handleSessionCompleteLogic() {
+  const state = useSettings.getState();
+  if (state.mode === 'work') {
+    state.incrementSessions();
+    const newCount = state.sessionsCompleted;
+    const nextMode =
+      newCount % state.timer.longBreakInterval === 0 ? 'longBreak' : 'shortBreak';
+    state.resetTimer(nextMode);
+    if (state.autoStartBreaks) {
+      setTimeout(() => {
+        const current = useSettings.getState();
+        if (!current.isRunning) {
+          const w = new Worker('/workers/timerWorker.js');
+          w.postMessage({ action: 'start', duration: current.timeRemaining });
+          w.onmessage = (e: MessageEvent) => {
+            const { type, remaining } = e.data;
+            if (type === 'tick') {
+              useSettings.getState().setTimeRemaining(remaining);
+            } else if (type === 'complete') {
+              useSettings.getState().setIsRunning(false);
+              if (useSettings.getState().soundEnabled) playChimeSound();
+              w.terminate();
+            }
+          };
+          useSettings.getState().setIsRunning(true);
+        }
+      }, 500);
+    }
+  } else {
+    state.resetTimer('work');
+    if (state.autoStartPomodoros) {
+      setTimeout(() => {
+        const current = useSettings.getState();
+        if (!current.isRunning) {
+          const w = new Worker('/workers/timerWorker.js');
+          w.postMessage({ action: 'start', duration: current.timeRemaining });
+          w.onmessage = (e: MessageEvent) => {
+            const { type, remaining } = e.data;
+            if (type === 'tick') {
+              useSettings.getState().setTimeRemaining(remaining);
+            } else if (type === 'complete') {
+              useSettings.getState().setIsRunning(false);
+              if (useSettings.getState().soundEnabled) playChimeSound();
+              w.terminate();
+            }
+          };
+          useSettings.getState().setIsRunning(true);
+        }
+      }, 500);
+    }
+  }
+}
+
 export function useTimer() {
   const workerRef = useRef<Worker | null>(null);
   const soundEnabledRef = useRef(useSettings.getState().soundEnabled);
@@ -30,70 +83,16 @@ export function useTimer() {
   const timer = useSettings((s) => s.timer);
   const sessionsCompleted = useSettings((s) => s.sessionsCompleted);
   const setIsRunning = useSettings((s) => s.setIsRunning);
-  const incrementSessions = useSettings((s) => s.incrementSessions);
   const resetTimer = useSettings((s) => s.resetTimer);
 
-  // Keep soundEnabled ref in sync without re-creating the worker
+  // Keep soundEnabled ref in sync
   useEffect(() => {
     return useSettings.subscribe((state) => {
       soundEnabledRef.current = state.soundEnabled;
     });
   }, []);
 
-  const handleSessionComplete = useCallback(() => {
-    const state = useSettings.getState();
-    if (state.mode === 'work') {
-      incrementSessions();
-      const newCount = state.sessionsCompleted + 1;
-      const nextMode =
-        newCount % state.timer.longBreakInterval === 0 ? 'longBreak' : 'shortBreak';
-      resetTimer(nextMode);
-      if (state.autoStartBreaks) {
-        setTimeout(() => {
-          const current = useSettings.getState();
-          if (!current.isRunning) {
-            const w = new Worker('/workers/timerWorker.js');
-            w.postMessage({ action: 'start', duration: current.timeRemaining });
-            w.onmessage = (e: MessageEvent) => {
-              const { type, remaining } = e.data;
-              if (type === 'tick') {
-                useSettings.getState().setTimeRemaining(remaining);
-              } else if (type === 'complete') {
-                useSettings.getState().setIsRunning(false);
-                playChimeSound();
-                w.terminate();
-              }
-            };
-            useSettings.getState().setIsRunning(true);
-          }
-        }, 500);
-      }
-    } else {
-      resetTimer('work');
-      if (state.autoStartPomodoros) {
-        setTimeout(() => {
-          const current = useSettings.getState();
-          if (!current.isRunning) {
-            const w = new Worker('/workers/timerWorker.js');
-            w.postMessage({ action: 'start', duration: current.timeRemaining });
-            w.onmessage = (e: MessageEvent) => {
-              const { type, remaining } = e.data;
-              if (type === 'tick') {
-                useSettings.getState().setTimeRemaining(remaining);
-              } else if (type === 'complete') {
-                useSettings.getState().setIsRunning(false);
-                playChimeSound();
-                w.terminate();
-              }
-            };
-            useSettings.getState().setIsRunning(true);
-          }
-        }, 500);
-      }
-    }
-  }, [incrementSessions, resetTimer]);
-
-  // Create worker once, use refs for dynamic values
+  // Create worker ONCE on mount, never re-create
   useEffect(() => {
     const worker = new Worker('/workers/timerWorker.js');
     workerRef.current = worker;
@@ -107,7 +106,7 @@ export function useTimer() {
         if (soundEnabledRef.current) {
           playChimeSound();
         }
-        handleSessionComplete();
+        handleSessionCompleteLogic();
       }
     };
 
@@ -115,7 +114,8 @@ export function useTimer() {
       worker.terminate();
       workerRef.current = null;
     };
-  }, [handleSessionComplete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const start = useCallback(() => {
     if (!workerRef.current) return;
@@ -142,8 +142,8 @@ export function useTimer() {
   const skip = useCallback(() => {
     workerRef.current?.postMessage({ action: 'stop' });
     setIsRunning(false);
-    handleSessionComplete();
-  }, [setIsRunning, handleSessionComplete]);
+    handleSessionCompleteLogic();
+  }, [setIsRunning]);
 
   const toggle = useCallback(() => {
     if (useSettings.getState().isRunning) {
