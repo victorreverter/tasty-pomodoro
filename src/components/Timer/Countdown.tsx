@@ -25,12 +25,14 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
     longBreak: 'Long Break',
   };
 
+  const modeColors: Record<string, string> = {
+    work: '#ff6b6b',
+    shortBreak: '#4ecdc4',
+    longBreak: '#6366f1',
+  };
+
   return (
-    <motion.div
-      className="relative flex items-center justify-center"
-      animate={{ scale: isRunning ? 1 : 0.95 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-    >
+    <div className="relative flex items-center justify-center">
       <svg
         width={size}
         height={size}
@@ -46,17 +48,19 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
           stroke="rgba(255,255,255,0.08)"
           strokeWidth={strokeWidth}
         />
-        <motion.circle
+        <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="var(--accent)"
+          stroke={modeColors[mode]}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}
-          animate={{ strokeDashoffset }}
-          transition={{ duration: 0.4, ease: 'linear' }}
+          strokeDashoffset={strokeDashoffset}
+          style={{
+            transition: 'stroke-dashoffset 1s linear, stroke 0.5s ease',
+          }}
         />
       </svg>
 
@@ -70,20 +74,29 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
         >
           {modeLabels[mode]}
         </motion.span>
-        <motion.span
+        <div
           className="text-white text-6xl md:text-7xl font-light tracking-tight text-shadow tabular-nums"
-          layout
         >
           {String(minutes).padStart(2, '0')}
-          <motion.span
-            animate={{ opacity: isRunning ? [1, 0.3, 1] : 1 }}
-            transition={{ duration: 1, repeat: isRunning ? Infinity : 0, ease: 'linear' }}
+          <span
+            className="inline-block"
+            style={{
+              opacity: isRunning ? undefined : 1,
+              animation: isRunning ? 'blink 1s step-end infinite' : 'none',
+            }}
           >
             :
-          </motion.span>
+          </span>
           {String(seconds).padStart(2, '0')}
-        </motion.span>
+        </div>
       </div>
-    </motion.div>
+
+      <style>{`
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
+    </div>
   );
 }

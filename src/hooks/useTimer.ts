@@ -21,30 +21,34 @@ function playChimeSound() {
 
 export function useTimer() {
   const workerRef = useRef<Worker | null>(null);
-  const {
-    mode,
-    isRunning,
-    timeRemaining,
-    timer,
-    soundEnabled,
-    autoStartBreaks,
-    autoStartPomodoros,
-    sessionsCompleted,
-    setIsRunning,
-    setTimeRemaining,
-    incrementSessions,
-    resetTimer,
-  } = useSettings();
+  const soundEnabledRef = useRef(useSettings.getState().soundEnabled);
+
+  const mode = useSettings((s) => s.mode);
+  const isRunning = useSettings((s) => s.isRunning);
+  const timeRemaining = useSettings((s) => s.timeRemaining);
+  const totalTime = useSettings((s) => s.totalTime);
+  const timer = useSettings((s) => s.timer);
+  const sessionsCompleted = useSettings((s) => s.sessionsCompleted);
+  const setIsRunning = useSettings((s) => s.setIsRunning);
+  const incrementSessions = useSettings((s) => s.incrementSessions);
+  const resetTimer = useSettings((s) => s.resetTimer);
+
+  // Keep soundEnabled ref in sync without re-creating the worker
+  useEffect(() => {
+    return useSettings.subscribe((state) => {
+      soundEnabledRef.current = state.soundEnabled;
+    });
+  }, []);
 
   const handleSessionComplete = useCallback(() => {
     const state = useSettings.getState();
     if (state.mode === 'work') {
-      const newCount = state.sessionsCompleted + 1;
       incrementSessions();
+      const newCount = state.sessionsCompleted + 1;
       const nextMode =
         newCount % state.timer.longBreakInterval === 0 ? 'longBreak' : 'shortBreak';
       resetTimer(nextMode);
-      if (autoStartBreaks) {
+      if (state.autoStartBreaks) {
         setTimeout(() => {
           const current = useSettings.getState();
           if (!current.isRunning) {
@@ -56,6 +60,7 @@ export function useTimer() {
                 useSettings.getState().setTimeRemaining(remaining);
               } else if (type === 'complete') {
                 useSettings.getState().setIsRunning(false);
+                playChimeSound();
                 w.terminate();
               }
             };
@@ -65,7 +70,7 @@ export function useTimer() {
       }
     } else {
       resetTimer('work');
-      if (autoStartPomodoros) {
+      if (state.autoStartPomodoros) {
         setTimeout(() => {
           const current = useSettings.getState();
           if (!current.isRunning) {
@@ -77,6 +82,7 @@ export function useTimer() {
                 useSettings.getState().setTimeRemaining(remaining);
               } else if (type === 'complete') {
                 useSettings.getState().setIsRunning(false);
+                playChimeSound();
                 w.terminate();
               }
             };
@@ -85,18 +91,20 @@ export function useTimer() {
         }, 500);
       }
     }
-  }, [autoStartBreaks, autoStartPomodoros, incrementSessions, resetTimer]);
+  }, [incrementSessions, resetTimer]);
 
+  // Create worker once, use refs for dynamic values
   useEffect(() => {
-    workerRef.current = new Worker('/workers/timerWorker.js');
+    const worker = new Worker('/workers/timerWorker.js');
+    workerRef.current = worker;
 
-    workerRef.current.onmessage = (e: MessageEvent) => {
+    worker.onmessage = (e: MessageEvent) => {
       const { type, remaining } = e.data;
       if (type === 'tick') {
-        setTimeRemaining(remaining);
+        useSettings.getState().setTimeRemaining(remaining);
       } else if (type === 'complete') {
-        setIsRunning(false);
-        if (soundEnabled) {
+        useSettings.getState().setIsRunning(false);
+        if (soundEnabledRef.current) {
           playChimeSound();
         }
         handleSessionComplete();
@@ -104,15 +112,19 @@ export function useTimer() {
     };
 
     return () => {
-      workerRef.current?.terminate();
+      worker.terminate();
+      workerRef.current = null;
     };
-  }, [soundEnabled, handleSessionComplete, setTimeRemaining, setIsRunning]);
+  }, [handleSessionComplete]);
 
   const start = useCallback(() => {
     if (!workerRef.current) return;
-    workerRef.current.postMessage({ action: 'start', duration: timeRemaining });
+    workerRef.current.postMessage({
+      action: 'start',
+      duration: useSettings.getState().timeRemaining,
+    });
     setIsRunning(true);
-  }, [timeRemaining, setIsRunning]);
+  }, [setIsRunning]);
 
   const pause = useCallback(() => {
     workerRef.current?.postMessage({ action: 'pause' });
@@ -122,9 +134,9 @@ export function useTimer() {
   const reset = useCallback(
     (toMode?: 'work' | 'shortBreak' | 'longBreak') => {
       workerRef.current?.postMessage({ action: 'stop' });
-      resetTimer(toMode ?? mode);
+      resetTimer(toMode ?? useSettings.getState().mode);
     },
-    [mode, resetTimer]
+    [resetTimer]
   );
 
   const skip = useCallback(() => {
@@ -134,18 +146,18 @@ export function useTimer() {
   }, [setIsRunning, handleSessionComplete]);
 
   const toggle = useCallback(() => {
-    if (isRunning) {
+    if (useSettings.getState().isRunning) {
       pause();
     } else {
       start();
     }
-  }, [isRunning, start, pause]);
+  }, [start, pause]);
 
   return {
     mode,
     isRunning,
     timeRemaining,
-    totalTime: useSettings((s) => s.totalTime),
+    totalTime,
     sessionsCompleted,
     timerSettings: timer,
     start,

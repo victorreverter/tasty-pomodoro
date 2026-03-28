@@ -122,27 +122,25 @@ function App() {
 
 function SessionCounter({ count }: { count: number }) {
   return (
-    <motion.div
-      className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5"
-      key={count}
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-    >
-      {Array.from({ length: Math.min(count, 8) }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="w-2 h-2 rounded-full"
-          style={{ background: 'var(--accent)' }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: i * 0.05 }}
-        />
-      ))}
+    <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5 min-w-[36px] min-h-[28px]">
+      {count === 0 ? (
+        <span className="text-white/30 text-[10px]">0</span>
+      ) : (
+        Array.from({ length: Math.min(count, 8) }).map((_, i) => (
+          <motion.div
+            key={`${count}-${i}`}
+            className="w-2 h-2 rounded-full"
+            style={{ background: 'var(--accent)' }}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: i * 0.05, type: 'spring', stiffness: 400, damping: 15 }}
+          />
+        ))
+      )}
       {count > 8 && (
         <span className="text-white/50 text-[10px] ml-0.5">+{count - 8}</span>
       )}
-    </motion.div>
+    </div>
   );
 }
 
