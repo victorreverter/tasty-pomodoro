@@ -86,13 +86,12 @@ export function AudioPlayer() {
   }, []);
 
   useEffect(() => {
-    if (ambientSound === currentSoundRef.current) {
-      if (gainRef.current) {
-        gainRef.current.gain.setTargetAtTime(ambientVolume, audioContextRef.current?.currentTime || 0, 0.1);
-      }
-      return;
+    if (gainRef.current && audioContextRef.current) {
+      gainRef.current.gain.setTargetAtTime(ambientVolume, audioContextRef.current.currentTime, 0.1);
     }
+  }, [ambientVolume]);
 
+  useEffect(() => {
     stopAll();
     currentSoundRef.current = ambientSound;
 
@@ -126,7 +125,8 @@ export function AudioPlayer() {
     return () => {
       stopAll();
     };
-  }, [ambientSound, ambientVolume, stopAll, createRainSound, createCafeSound, createWhiteNoiseSound]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ambientSound, stopAll, createRainSound, createCafeSound, createWhiteNoiseSound]);
 
   useEffect(() => {
     return () => {
