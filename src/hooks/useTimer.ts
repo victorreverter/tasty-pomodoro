@@ -1,6 +1,8 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useSettings } from '../store/useSettings';
 
+const workerUrl = import.meta.env.BASE_URL + 'workers/timerWorker.js';
+
 function playChimeSound() {
   try {
     const ctx = new AudioContext();
@@ -31,7 +33,7 @@ function handleSessionCompleteLogic() {
       setTimeout(() => {
         const current = useSettings.getState();
         if (!current.isRunning) {
-          const w = new Worker('/workers/timerWorker.js');
+          const w = new Worker(workerUrl);
           w.postMessage({ action: 'start', duration: current.timeRemaining });
           w.onmessage = (e: MessageEvent) => {
             const { type, remaining } = e.data;
@@ -53,7 +55,7 @@ function handleSessionCompleteLogic() {
       setTimeout(() => {
         const current = useSettings.getState();
         if (!current.isRunning) {
-          const w = new Worker('/workers/timerWorker.js');
+          const w = new Worker(workerUrl);
           w.postMessage({ action: 'start', duration: current.timeRemaining });
           w.onmessage = (e: MessageEvent) => {
             const { type, remaining } = e.data;
@@ -94,7 +96,7 @@ export function useTimer() {
 
   // Create worker ONCE on mount, never re-create
   useEffect(() => {
-    const worker = new Worker('/workers/timerWorker.js');
+    const worker = new Worker(workerUrl);
     workerRef.current = worker;
 
     worker.onmessage = (e: MessageEvent) => {
