@@ -41,8 +41,11 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <h1 className="text-white/80 text-lg font-medium tracking-wide text-shadow">
-            tasty-pomodoro
+          <h1 className="tracking-wide text-shadow flex items-baseline gap-2">
+            <span style={{ fontFamily: 'Caveat, cursive' }} className="font-bold text-3xl text-[var(--accent)]">
+              tasty
+            </span>
+            <span className="font-light text-sm text-white/40 uppercase tracking-[0.15em]">pomodoro</span>
           </h1>
           <div className="flex items-center gap-2">
             <SessionCounter count={sessionsCompleted} />
