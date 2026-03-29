@@ -34,10 +34,10 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
   return (
     <div className="relative flex items-center justify-center">
       <svg
-        width={size}
-        height={size}
+        width="100%"
+        height="100%"
         viewBox={`0 0 ${size} ${size}`}
-        className="ring-glow"
+        className="ring-glow w-[min(280px,65vw)] h-[min(280px,65vw)]"
         style={{ transform: 'rotate(-90deg)' }}
       >
         <circle
@@ -66,7 +66,7 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
 
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <motion.span
-          className="text-white/40 text-xs uppercase tracking-[0.2em] mb-2"
+          className="text-white/40 text-[10px] md:text-xs uppercase tracking-[0.2em] mb-1 md:mb-2"
           key={mode}
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,7 +74,7 @@ export function Countdown({ timeRemaining, totalTime, mode, isRunning }: Countdo
         >
           {modeLabels[mode]}
         </motion.span>
-        <span className="text-white text-6xl md:text-7xl font-light tracking-tight text-shadow tabular-nums">
+        <span className="text-white text-5xl md:text-7xl font-light tracking-tight text-shadow tabular-nums">
           {String(minutes).padStart(2, '0')}
           <span
             className="inline-block"

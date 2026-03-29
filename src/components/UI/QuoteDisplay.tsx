@@ -30,10 +30,10 @@ export function QuoteDisplay() {
           transition={{ duration: 0.6, ease: 'easeInOut' }}
           className="text-center"
         >
-          <p className="text-white/70 text-sm md:text-base italic leading-relaxed text-shadow">
+          <p className="text-white/60 text-xs md:text-sm italic leading-relaxed text-shadow">
             &ldquo;{quoteData.quote.text}&rdquo;
           </p>
-          <p className="text-white/40 text-xs mt-2 tracking-wide">
+          <p className="text-white/30 text-[10px] md:text-xs mt-1 md:mt-2 tracking-wide">
             — {quoteData.quote.author}
           </p>
         </motion.div>

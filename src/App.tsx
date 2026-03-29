@@ -25,7 +25,7 @@ function App() {
   };
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative h-dvh w-screen overflow-hidden">
       <ImageLayer />
       <AudioPlayer />
 
@@ -34,18 +34,18 @@ function App() {
         style={{ background: modeColors[mode], transition: 'background 1s ease' }}
       />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-between py-8 md:py-12 px-4">
+      <div className="relative z-10 h-full flex flex-col items-center justify-between py-4 md:py-12 px-4">
         <motion.header
           className="flex items-center justify-between w-full max-w-lg"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <h1 className="tracking-wide text-shadow flex items-baseline gap-2">
-            <span style={{ fontFamily: 'Caveat, cursive' }} className="font-bold text-3xl text-[var(--accent)]">
+          <h1 className="tracking-wide text-shadow flex items-baseline gap-1.5 md:gap-2">
+            <span style={{ fontFamily: 'Caveat, cursive' }} className="font-bold text-2xl md:text-3xl text-[var(--accent)]">
               tasty
             </span>
-            <span className="font-light text-sm text-white/40 uppercase tracking-[0.15em]">pomodoro</span>
+            <span className="font-light text-xs md:text-sm text-white/40 uppercase tracking-[0.15em]">pomodoro</span>
           </h1>
           <div className="flex items-center gap-2">
             <SessionCounter count={sessionsCompleted} />
@@ -60,9 +60,9 @@ function App() {
           </div>
         </motion.header>
 
-        <main className="flex flex-col items-center gap-6">
+        <main className="flex flex-col items-center gap-4 md:gap-6">
           <GlassCard
-            className="p-6 md:p-10 flex flex-col items-center gap-6"
+            className="p-4 md:p-10 flex flex-col items-center gap-4 md:gap-6"
             style={{ borderRadius: '24px' }}
           >
             <Countdown

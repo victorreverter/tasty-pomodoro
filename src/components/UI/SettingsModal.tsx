@@ -65,7 +65,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           />
 
           <motion.div
-            className="relative glass-dark rounded-3xl w-full max-w-md max-h-[85vh] overflow-y-auto p-6"
+            className="relative glass-dark rounded-3xl w-full max-w-md max-h-[85vh] overflow-y-auto p-4 md:p-6"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
