@@ -15,11 +15,15 @@ const BACKGROUND_OPTIONS: { value: BackgroundCategory; label: string }[] = [
   { value: 'abstract', label: 'Abstract' },
 ];
 
-const SOUND_OPTIONS: { value: AmbientSound; label: string }[] = [
-  { value: 'none', label: 'Off' },
-  { value: 'rain', label: 'Rain' },
-  { value: 'cafe', label: 'Café' },
-  { value: 'whitenoise', label: 'White Noise' },
+const SOUND_OPTIONS: { value: AmbientSound; label: string; icon: string }[] = [
+  { value: 'none', label: 'Off', icon: '' },
+  { value: 'rain', label: 'Rain', icon: '🌧' },
+  { value: 'cafe', label: 'Café', icon: '☕' },
+  { value: 'whitenoise', label: 'White Noise', icon: '📻' },
+  { value: 'forest', label: 'Forest', icon: '🌲' },
+  { value: 'ocean', label: 'Ocean', icon: '🌊' },
+  { value: 'thunder', label: 'Thunderstorm', icon: '⛈' },
+  { value: 'fireplace', label: 'Fireplace', icon: '🔥' },
 ];
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
@@ -122,12 +126,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     <button
                       key={opt.value}
                       onClick={() => setAmbientSound(opt.value)}
-                      className={`px-3 py-2 rounded-xl text-sm transition-all ${
+                      className={`px-3 py-2.5 rounded-xl text-sm transition-all flex items-center justify-center gap-1.5 ${
                         ambientSound === opt.value
                           ? 'bg-white/20 text-white border border-white/30'
                           : 'bg-white/5 text-white/60 hover:bg-white/10 border border-transparent'
                       }`}
                     >
+                      {opt.icon && <span className="text-base">{opt.icon}</span>}
                       {opt.label}
                     </button>
                   ))}
@@ -151,7 +156,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
               <Section title="Options" icon={<RotateCcw size={16} />}>
                 <ToggleRow
-                  label="Notification Sounds"
+                  label="Notification Chime"
                   checked={soundEnabled}
                   onChange={setSoundEnabled}
                 />

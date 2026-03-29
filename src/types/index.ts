@@ -2,7 +2,7 @@ export type TimerMode = 'work' | 'shortBreak' | 'longBreak';
 
 export type BackgroundCategory = 'nature' | 'minimal' | 'lofi' | 'abstract';
 
-export type AmbientSound = 'none' | 'rain' | 'cafe' | 'whitenoise';
+export type AmbientSound = 'none' | 'rain' | 'cafe' | 'whitenoise' | 'forest' | 'ocean' | 'thunder' | 'fireplace';
 
 export interface TimerSettings {
   workMinutes: number;
