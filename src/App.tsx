@@ -30,13 +30,13 @@ function App() {
       <AudioPlayer />
 
       <div
-        className="absolute inset-0 z-[1] pointer-events-none"
+        className="absolute inset-0 z-[1] pointer-events-none py-12 md:py-20"
         style={{ background: modeColors[mode], transition: 'background 1s ease' }}
       />
 
       <div className="relative z-10 h-full flex flex-col items-center justify-between py-4 md:py-12 px-4">
         <motion.header
-          className="flex items-center justify-between w-full max-w-lg"
+          className="flex items-center justify-between w-full max-w-lg py-6 md:py-10"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
@@ -102,7 +102,7 @@ function App() {
           </GlassCard>
         </main>
 
-        <footer className="w-full">
+        <footer className="w-full pb-12 md:pb-20">
           <AnimatePresence>
             {showQuotes && (
               <motion.div

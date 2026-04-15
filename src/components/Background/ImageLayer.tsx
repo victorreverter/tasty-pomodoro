@@ -79,7 +79,7 @@ export function ImageLayer() {
   const currentImage = images[currentIndex];
 
   return (
-    <div className="absolute inset-0 z-0">
+    <div className="absolute inset-0 z-0 py-12 md:py-20">
       <AnimatePresence mode="wait">
         {currentImage && (
           <motion.div
