@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Volume2, VolumeX, Clock, Play, RotateCcw } from 'lucide-react';
+import { X, Volume2, VolumeX, Clock, Play, RotateCcw, Palette } from 'lucide-react';
 import { useSettings } from '../../store/useSettings';
-import type { BackgroundCategory, AmbientSound } from '../../types';
+import type { BackgroundCategory, AmbientSound, AccentColor } from '../../types';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -26,6 +26,17 @@ const SOUND_OPTIONS: { value: AmbientSound; label: string; icon: string }[] = [
   { value: 'fireplace', label: 'Fireplace', icon: '🔥' },
 ];
 
+const ACCENT_COLORS: { value: AccentColor; label: string; hex: string }[] = [
+  { value: 'red', label: 'Red', hex: '#ff6b6b' },
+  { value: 'pink', label: 'Pink', hex: '#ff85a2' },
+  { value: 'orange', label: 'Orange', hex: '#ffb347' },
+  { value: 'yellow', label: 'Yellow', hex: '#f7dc6f' },
+  { value: 'green', label: 'Green', hex: '#77dd77' },
+  { value: 'cyan', label: 'Cyan', hex: '#4ecdc4' },
+  { value: 'blue', label: 'Blue', hex: '#6c5ce7' },
+  { value: 'purple', label: 'Purple', hex: '#a29bfe' },
+];
+
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const {
     timer,
@@ -37,6 +48,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     autoStartBreaks,
     autoStartPomodoros,
     enableTaskList,
+    accentColor,
     updateTimerSettings,
     setBackgroundCategory,
     setAmbientSound,
@@ -46,6 +58,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     setAutoStartBreaks,
     setAutoStartPomodoros,
     setEnableTaskList,
+    setAccentColor,
   } = useSettings();
 
   return (
@@ -84,6 +97,29 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
 
             <div className="space-y-6">
+              <Section title="Accent Color" icon={<Palette size={16} />}>
+                <div className="flex gap-3 justify-center">
+                  {ACCENT_COLORS.map((color) => (
+                    <button
+                      key={color.value}
+                      onClick={() => setAccentColor(color.value)}
+                      className={`w-8 h-8 rounded-full transition-all flex items-center justify-center ${
+                        accentColor === color.value
+                          ? 'ring-2 ring-white ring-offset-2 ring-offset-transparent scale-110'
+                          : 'hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: color.hex }}
+                    >
+                      {accentColor === color.value && (
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </Section>
+
               <Section title="Timer (minutes)" icon={<Clock size={16} />}>
                 <div className="grid grid-cols-3 gap-3">
                   <TimeInput

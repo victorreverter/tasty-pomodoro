@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppSettings, TimerMode, BackgroundCategory, AmbientSound, TimerSettings, Task } from '../types';
+import type { AppSettings, TimerMode, BackgroundCategory, AmbientSound, TimerSettings, Task, AccentColor } from '../types';
 
 interface PomodoroStore extends AppSettings {
   mode: TimerMode;
@@ -26,6 +26,7 @@ interface PomodoroStore extends AppSettings {
   setAutoStartBreaks: (auto: boolean) => void;
   setAutoStartPomodoros: (auto: boolean) => void;
   setEnableTaskList: (enabled: boolean) => void;
+  setAccentColor: (color: AccentColor) => void;
   addTask: (text: string) => void;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
@@ -46,6 +47,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   autoStartBreaks: false,
   autoStartPomodoros: false,
   enableTaskList: false,
+  accentColor: 'red',
 };
 
 export const useSettings = create<PomodoroStore>()(
@@ -93,6 +95,7 @@ export const useSettings = create<PomodoroStore>()(
       setAutoStartBreaks: (autoStartBreaks) => set({ autoStartBreaks }),
       setAutoStartPomodoros: (autoStartPomodoros) => set({ autoStartPomodoros }),
       setEnableTaskList: (enableTaskList) => set({ enableTaskList }),
+      setAccentColor: (accentColor) => set({ accentColor }),
 
       addTask: (text) =>
         set((s) => ({
@@ -122,6 +125,7 @@ export const useSettings = create<PomodoroStore>()(
         autoStartBreaks: state.autoStartBreaks,
         autoStartPomodoros: state.autoStartPomodoros,
         enableTaskList: state.enableTaskList,
+        accentColor: state.accentColor,
         tasks: state.tasks,
       }),
     }

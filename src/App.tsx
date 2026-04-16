@@ -10,9 +10,11 @@ import { QuoteDisplay } from './components/UI/QuoteDisplay';
 import { SettingsModal } from './components/UI/SettingsModal';
 import { TaskList } from './components/UI/TaskList';
 import { useTimer } from './hooks/useTimer';
+import { useAccentColor } from './hooks/useAccentColor';
 import { useSettings } from './store/useSettings';
 
 function App() {
+  useAccentColor();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { mode, isRunning, timeRemaining, totalTime, toggle, skip, reset, sessionsCompleted } =
     useTimer();

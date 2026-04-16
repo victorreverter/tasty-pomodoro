@@ -4,6 +4,8 @@ export type BackgroundCategory = 'nature' | 'minimal' | 'lofi' | 'abstract';
 
 export type AmbientSound = 'none' | 'rain' | 'cafe' | 'whitenoise' | 'forest' | 'ocean' | 'thunder' | 'fireplace';
 
+export type AccentColor = 'red' | 'pink' | 'orange' | 'yellow' | 'green' | 'cyan' | 'blue' | 'purple';
+
 export interface TimerSettings {
   workMinutes: number;
   shortBreakMinutes: number;
@@ -21,6 +23,7 @@ export interface AppSettings {
   autoStartBreaks: boolean;
   autoStartPomodoros: boolean;
   enableTaskList: boolean;
+  accentColor: AccentColor;
 }
 
 export interface Quote {
