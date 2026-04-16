@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppSettings, TimerMode, BackgroundCategory, AmbientSound, TimerSettings } from '../types';
+import type { AppSettings, TimerMode, BackgroundCategory, AmbientSound, TimerSettings, Task } from '../types';
 
 interface PomodoroStore extends AppSettings {
   mode: TimerMode;
@@ -8,6 +8,7 @@ interface PomodoroStore extends AppSettings {
   timeRemaining: number;
   totalTime: number;
   sessionsCompleted: number;
+  tasks: Task[];
 
   setMode: (mode: TimerMode) => void;
   setIsRunning: (running: boolean) => void;
@@ -24,6 +25,10 @@ interface PomodoroStore extends AppSettings {
   setSoundEnabled: (enabled: boolean) => void;
   setAutoStartBreaks: (auto: boolean) => void;
   setAutoStartPomodoros: (auto: boolean) => void;
+  setEnableTaskList: (enabled: boolean) => void;
+  addTask: (text: string) => void;
+  toggleTask: (id: string) => void;
+  deleteTask: (id: string) => void;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -40,6 +45,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   soundEnabled: true,
   autoStartBreaks: false,
   autoStartPomodoros: false,
+  enableTaskList: false,
 };
 
 export const useSettings = create<PomodoroStore>()(
@@ -51,6 +57,7 @@ export const useSettings = create<PomodoroStore>()(
       timeRemaining: DEFAULT_SETTINGS.timer.workMinutes * 60,
       totalTime: DEFAULT_SETTINGS.timer.workMinutes * 60,
       sessionsCompleted: 0,
+      tasks: [],
 
       setMode: (mode) => set({ mode }),
       setIsRunning: (isRunning) => set({ isRunning }),
@@ -85,6 +92,23 @@ export const useSettings = create<PomodoroStore>()(
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
       setAutoStartBreaks: (autoStartBreaks) => set({ autoStartBreaks }),
       setAutoStartPomodoros: (autoStartPomodoros) => set({ autoStartPomodoros }),
+      setEnableTaskList: (enableTaskList) => set({ enableTaskList }),
+
+      addTask: (text) =>
+        set((s) => ({
+          tasks: [
+            ...s.tasks,
+            { id: crypto.randomUUID(), text, completed: false, createdAt: Date.now() },
+          ],
+        })),
+      toggleTask: (id) =>
+        set((s) => ({
+          tasks: s.tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+        })),
+      deleteTask: (id) =>
+        set((s) => ({
+          tasks: s.tasks.filter((t) => t.id !== id),
+        })),
     }),
     {
       name: 'tasty-pomodoro-settings',
@@ -97,6 +121,8 @@ export const useSettings = create<PomodoroStore>()(
         soundEnabled: state.soundEnabled,
         autoStartBreaks: state.autoStartBreaks,
         autoStartPomodoros: state.autoStartPomodoros,
+        enableTaskList: state.enableTaskList,
+        tasks: state.tasks,
       }),
     }
   )

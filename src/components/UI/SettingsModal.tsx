@@ -36,6 +36,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     soundEnabled,
     autoStartBreaks,
     autoStartPomodoros,
+    enableTaskList,
     updateTimerSettings,
     setBackgroundCategory,
     setAmbientSound,
@@ -44,6 +45,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     setSoundEnabled,
     setAutoStartBreaks,
     setAutoStartPomodoros,
+    setEnableTaskList,
   } = useSettings();
 
   return (
@@ -174,6 +176,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   label="Auto-start Pomodoros"
                   checked={autoStartPomodoros}
                   onChange={setAutoStartPomodoros}
+                />
+                <ToggleRow
+                  label="Task List"
+                  checked={enableTaskList}
+                  onChange={setEnableTaskList}
                 />
               </Section>
             </div>

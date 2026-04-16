@@ -8,6 +8,7 @@ import { Controls } from './components/Timer/Controls';
 import { GlassCard } from './components/UI/GlassCard';
 import { QuoteDisplay } from './components/UI/QuoteDisplay';
 import { SettingsModal } from './components/UI/SettingsModal';
+import { TaskList } from './components/UI/TaskList';
 import { useTimer } from './hooks/useTimer';
 import { useSettings } from './store/useSettings';
 
@@ -25,7 +26,7 @@ function App() {
   };
 
   return (
-    <div className="relative h-dvh w-screen overflow-hidden">
+    <div className="relative min-h-dvh w-screen overflow-x-hidden">
       <ImageLayer />
       <AudioPlayer />
 
@@ -34,7 +35,7 @@ function App() {
         style={{ background: modeColors[mode], transition: 'background 1s ease' }}
       />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-between py-4 md:py-12 px-4">
+      <div className="relative z-10 flex flex-col min-h-dvh py-4 md:py-12 px-4">
         <motion.header
           className="flex items-center justify-between w-full max-w-lg py-6 md:py-10"
           initial={{ opacity: 0, y: -20 }}
@@ -60,7 +61,7 @@ function App() {
           </div>
         </motion.header>
 
-        <main className="flex flex-col items-center gap-4 md:gap-6">
+        <main className="flex flex-col items-center gap-4 md:gap-6 flex-1">
           <GlassCard
             className="p-4 md:p-10 flex flex-col items-center gap-4 md:gap-6"
             style={{ borderRadius: '24px' }}
@@ -102,7 +103,8 @@ function App() {
           </GlassCard>
         </main>
 
-        <footer className="w-full pb-12 md:pb-20">
+        <footer className="w-full pb-12 md:pb-20 pt-4 space-y-6">
+          <TaskList />
           <AnimatePresence>
             {showQuotes && (
               <motion.div

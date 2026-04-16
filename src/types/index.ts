@@ -20,11 +20,19 @@ export interface AppSettings {
   soundEnabled: boolean;
   autoStartBreaks: boolean;
   autoStartPomodoros: boolean;
+  enableTaskList: boolean;
 }
 
 export interface Quote {
   text: string;
   author: string;
+}
+
+export interface Task {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: number;
 }
 
 export interface TimerState {
