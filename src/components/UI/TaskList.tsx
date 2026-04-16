@@ -22,7 +22,7 @@ export function TaskList() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-sm glass rounded-2xl p-4"
+      className="w-full glass rounded-2xl p-4"
     >
       <h3 className="text-white/70 text-xs uppercase tracking-wider font-medium mb-3">Tasks</h3>
 

@@ -37,7 +37,7 @@ function App() {
 
       <div className="relative z-10 flex flex-col min-h-dvh py-4 md:py-12 px-4">
         <motion.header
-          className="flex items-center justify-between w-full max-w-lg py-4 md:py-6"
+          className="flex items-center justify-between max-w-lg mx-auto w-full py-4 md:py-2 mb-4 md:mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
@@ -61,7 +61,7 @@ function App() {
           </div>
         </motion.header>
 
-        <main className="flex flex-col items-center gap-4 md:gap-6 flex-1">
+        <main className="flex flex-col md:flex-row md:items-start md:justify-center md:gap-6 items-center gap-4 md:gap-6 flex-1 w-full max-w-lg mx-auto">
           <GlassCard
             className="p-4 md:p-10 flex flex-col items-center gap-4 md:gap-6"
             style={{ borderRadius: '24px' }}
@@ -101,10 +101,13 @@ function App() {
               onReset={() => reset()}
             />
           </GlassCard>
+
+          <div className="w-full md:w-auto md:min-w-[300px]">
+            <TaskList />
+          </div>
         </main>
 
         <footer className="w-full pb-12 md:pb-20 pt-4 space-y-6">
-          <TaskList />
           <AnimatePresence>
             {showQuotes && (
               <motion.div
