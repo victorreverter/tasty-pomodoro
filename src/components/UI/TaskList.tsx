@@ -61,7 +61,7 @@ export function TaskList() {
                 {task.completed ? <CheckCircle2 size={18} /> : <Check size={18} />}
               </button>
               <span
-                className={`flex-1 text-sm truncate transition-all ${
+                className={`flex-1 text-sm break-words transition-all ${
                   task.completed ? 'text-white/40 line-through' : 'text-white/80'
                 }`}
               >
