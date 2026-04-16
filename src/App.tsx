@@ -37,7 +37,7 @@ function App() {
 
       <div className="relative z-10 flex flex-col min-h-dvh py-4 md:py-12 px-4">
         <motion.header
-          className="flex items-center justify-between w-full max-w-lg py-6 md:py-10"
+          className="flex items-center justify-between w-full max-w-lg py-4 md:py-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
