@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Check, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useSettings } from '../../store/useSettings';
 
 export function TaskList() {
@@ -50,15 +50,21 @@ export function TaskList() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              className="flex items-center gap-2 group"
+              className="flex items-start gap-3 group"
             >
               <button
                 onClick={() => toggleTask(task.id)}
-                className={`flex-shrink-0 transition-colors ${
-                  task.completed ? 'text-[var(--accent)]' : 'text-white/30 hover:text-white/60'
+                className={`flex-shrink-0 mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  task.completed
+                    ? 'bg-[var(--accent)] border-[var(--accent)]'
+                    : 'border-white/40 hover:border-white/60'
                 }`}
               >
-                {task.completed ? <CheckCircle2 size={18} /> : <Check size={18} />}
+                {task.completed && (
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
               </button>
               <span
                 className={`flex-1 text-sm break-words transition-all ${
@@ -69,7 +75,7 @@ export function TaskList() {
               </span>
               <button
                 onClick={() => deleteTask(task.id)}
-                className="text-white/30 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                className="text-white/30 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
               >
                 <Trash2 size={16} />
               </button>
