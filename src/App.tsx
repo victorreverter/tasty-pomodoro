@@ -20,6 +20,7 @@ function App() {
     useTimer();
   const showQuotes = useSettings((s) => s.showQuotes);
   const resetTimer = useSettings((s) => s.resetTimer);
+  const enableTaskList = useSettings((s) => s.enableTaskList);
 
   const modeColors: Record<string, string> = {
     work: 'rgba(255, 107, 107, 0.15)',
@@ -63,7 +64,7 @@ function App() {
           </div>
         </motion.header>
 
-        <main className="flex flex-col md:flex-row md:items-start md:justify-center md:gap-6 items-center gap-4 md:gap-6 flex-1 w-full max-w-lg mx-auto">
+        <main className={`flex flex-col ${enableTaskList ? 'md:flex-row md:items-start md:justify-center' : 'justify-center items-center'} md:gap-6 gap-4 md:gap-6 flex-1 w-full max-w-lg mx-auto`}>
           <GlassCard
             className="p-4 md:p-10 flex flex-col items-center gap-4 md:gap-6"
             style={{ borderRadius: '24px' }}
@@ -104,9 +105,11 @@ function App() {
             />
           </GlassCard>
 
-          <div className="w-full md:w-auto md:min-w-[300px]">
-            <TaskList />
-          </div>
+          {enableTaskList && (
+            <div className="w-full md:w-auto md:min-w-[300px]">
+              <TaskList />
+            </div>
+          )}
         </main>
 
         <footer className="w-full pb-12 md:pb-20 pt-4 space-y-6">
