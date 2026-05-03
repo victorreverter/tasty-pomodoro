@@ -46,20 +46,22 @@ function App() {
           transition={{ delay: 0.2, duration: 0.6 }}
         >
           <h1 className="tracking-wide text-shadow flex items-baseline gap-1.5 md:gap-2">
-            <span style={{ fontFamily: 'Caveat, cursive' }} className="font-bold text-2xl md:text-3xl text-[var(--accent)]">
+            <span style={{ fontFamily: 'Caveat, cursive' }} className="font-bold text-2xl md:text-3xl text-[var(--accent)] [text-shadow:_0_10px_32px_rgba(0,0,0,0.9),_0_0_40px_var(--accent-glow),_0_0_60px_var(--accent-glow)]">
               tasty
             </span>
-            <span className="font-light text-xs md:text-sm text-white/40 uppercase tracking-[0.15em]">pomodoro</span>
+            <span className="font-medium text-sm md:text-base text-white/90 uppercase tracking-[0.15em] [text-shadow:_0_8px_24px_rgba(0,0,0,0.95),_0_4px_12px_rgba(0,0,0,0.9)]">
+              pomodoro
+            </span>
           </h1>
           <div className="flex items-center gap-2">
             <SessionCounter count={sessionsCompleted} />
             <motion.button
               onClick={() => setSettingsOpen(true)}
-              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/60 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              className="w-11 h-11 rounded-full bg-black/40 hover:bg-black/50 flex items-center justify-center text-white/80 hover:text-white transition-all duration-200 [box-shadow:0_8px_36px_rgba(0,0,0,0.6),0_0_24px_rgba(0,0,0,0.4)] hover:[box-shadow:0_12px_48px_rgba(0,0,0,0.8),0_0_32px_rgba(0,0,0,0.6)]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Settings size={16} />
+              <Settings size={20} className="drop-shadow-lg" />
             </motion.button>
           </div>
         </motion.header>
@@ -135,23 +137,25 @@ function App() {
 
 function SessionCounter({ count }: { count: number }) {
   return (
-    <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5 min-w-[36px] min-h-[28px]">
+    <div className="flex items-center gap-1.5">
       {count === 0 ? (
-        <span className="text-white/30 text-[10px]">0</span>
+        <span className="text-white/60 text-[10px] font-medium [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">0</span>
       ) : (
-        Array.from({ length: Math.min(count, 8) }).map((_, i) => (
-          <motion.div
-            key={`${count}-${i}`}
-            className="w-2 h-2 rounded-full"
-            style={{ background: 'var(--accent)' }}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: i * 0.05, type: 'spring', stiffness: 400, damping: 15 }}
-          />
-        ))
-      )}
-      {count > 8 && (
-        <span className="text-white/50 text-[10px] ml-0.5">+{count - 8}</span>
+        <>
+          {Array.from({ length: Math.min(count, 8) }).map((_, i) => (
+            <motion.div
+              key={`${count}-${i}`}
+              className="w-2.5 h-2.5 rounded-full shadow-[0_0_12px_var(--accent)]"
+              style={{ background: 'var(--accent)' }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: i * 0.05, type: 'spring', stiffness: 400, damping: 15 }}
+            />
+          ))}
+          {count > 8 && (
+            <span className="text-white/70 text-[10px] font-semibold [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)] ml-1">+{count - 8}</span>
+          )}
+        </>
       )}
     </div>
   );
